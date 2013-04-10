@@ -36,4 +36,15 @@ public class CommonTransportation implements Transportation {
         return speed;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPricePreMiles(Double pricePreMiles) {
+        this.pricePreMiles = pricePreMiles;
+    }
+
+    public void setSpeed(Integer speed) {
+        this.speed = speed;
+    }
 }

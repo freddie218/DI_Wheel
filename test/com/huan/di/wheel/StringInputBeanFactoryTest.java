@@ -5,6 +5,9 @@ import com.huan.di.beans.Transportation;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -59,6 +62,22 @@ public class StringInputBeanFactoryTest {
 
         assertThat(transportation, notNullValue());
         assertThat(transportation.getName(), is("cross_polo"));
+        assertThat(transportation.getPricePreMiles(), is(2.0));
+        assertThat(transportation.getSpeed(), is(100));
+    }
+
+    @Test
+    public void shouldCreateObjectBySetters(){
+        String className = "com.huan.di.beans.Car";
+        Map<String, Object> setterParams = new HashMap<String, Object>();
+        setterParams.put("name", "polo");
+        setterParams.put("pricePreMiles", 2.0);
+        setterParams.put("speed", 100);
+
+        Transportation transportation = (Transportation) beanFactory.getBeanBySetter(className, setterParams);
+
+        assertThat(transportation, notNullValue());
+        assertThat(transportation.getName(), is("polo"));
         assertThat(transportation.getPricePreMiles(), is(2.0));
         assertThat(transportation.getSpeed(), is(100));
     }

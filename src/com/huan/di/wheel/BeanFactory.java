@@ -1,5 +1,7 @@
 package com.huan.di.wheel;
 
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: twer
@@ -11,4 +13,6 @@ public interface BeanFactory {
     Object getSimpleBean(String className);
 
     Object getBeanWithParam(String className, Class[] initTypes, Object[] inits);
+
+    Object getBeanBySetter(String className, Map<String, Object> setterParams);
 }
