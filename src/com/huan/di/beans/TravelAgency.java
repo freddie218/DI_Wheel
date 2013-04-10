@@ -12,6 +12,7 @@ public class TravelAgency {
     public static void main(String[] args) {
 
         Travel travel = new Travel(new Train());
+
         Location xian = new Location("xian");
         Location lanzhou = new Location("lanzhou");
         Location zhangye = new Location("zhangye");
