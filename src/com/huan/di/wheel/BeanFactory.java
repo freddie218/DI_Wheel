@@ -9,4 +9,6 @@ package com.huan.di.wheel;
  */
 public interface BeanFactory {
     Object getSimpleBean(String className);
+
+    Object getBeanWithParam(String className, Class[] initTypes, Object[] inits);
 }

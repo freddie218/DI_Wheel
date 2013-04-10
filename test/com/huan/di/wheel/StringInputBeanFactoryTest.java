@@ -1,10 +1,10 @@
 package com.huan.di.wheel;
 
+import com.huan.di.beans.Location;
 import com.huan.di.beans.Transportation;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -37,5 +37,29 @@ public class StringInputBeanFactoryTest {
 
         assertThat(train, notNullValue());
         assertThat(train.getName(), is("Train"));
+    }
+
+    @Test
+    public void shouldBeAbleToGetObjectWithParameter(){
+        String className = "com.huan.di.beans.Location";
+        Class[] initTypes = new Class[]{String.class};
+        Object[] inits = new Object[]{"Xian"};
+        Location location = (Location) beanFactory.getBeanWithParam(className, initTypes, inits);
+
+        assertThat(location, notNullValue());
+        assertThat(location.getName(), is("Xian"));
+    }
+
+    @Test
+    public void shouldBeAbleToGetClassMoreThanOneParameters(){
+        String className = "com.huan.di.beans.Car";
+        Class[] initTypes = new Class[]{String.class, double.class, int.class};
+        Object[] inits = new Object[]{"cross_polo", 2.0, 100};
+        Transportation transportation = (Transportation) beanFactory.getBeanWithParam(className, initTypes, inits);
+
+        assertThat(transportation, notNullValue());
+        assertThat(transportation.getName(), is("cross_polo"));
+        assertThat(transportation.getPricePreMiles(), is(2.0));
+        assertThat(transportation.getSpeed(), is(100));
     }
 }
