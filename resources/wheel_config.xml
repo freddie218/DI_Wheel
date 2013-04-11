@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wheels>
+
+    <wheel id="location" class="com.huan.di.beans.Location">
+        <constructor-arg type="java.lang.String" value="Dunhuang" />
+    </wheel>
+
+    <wheel id="train" class="com.huan.di.beans.Train" />
+
+    <wheel id="car" class="com.huan.di.beans.Car">
+        <constructor-arg type="java.lang.String" value="cross_polo" />
+        <constructor-arg type="java.lang.Double" value="2.1" />
+        <constructor-arg type="java.lang.Integer" value="100" />
+    </wheel>
+
+</wheels>
