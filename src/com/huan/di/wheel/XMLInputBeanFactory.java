@@ -2,6 +2,7 @@ package com.huan.di.wheel;
 
 import org.dom4j.Element;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,33 +13,105 @@ import java.util.Map;
  * Time: 10:47 PM
  * To change this template use File | Settings | File Templates.
  */
-public class XMLInputBeanFactory implements BeanFactory {
+public class XMLInputBeanFactory extends StringInputBeanFactory {
     XMLFileReader xmlFileReader = new XMLFileReader("./resources/wheel_config.xml");
 
-    @Override
-    public Object getSimpleBean(String beanName) {
-        if (null == beanName || beanName.isEmpty()) return null;
+    public Object getSimpleBeanByBeanId(String beanId) {
+        if (null == beanId || beanId.isEmpty()) return null;
 
         List beanList = xmlFileReader.nodeList("wheel");
         for (Object element : beanList) {
-            String beanId = ((Element)element).attribute("id").getValue();
-            if (beanId.equals(beanName)) {
+            String id = ((Element)element).attribute("id").getValue();
+            if (id.equals(beanId)) {
                 String className = ((Element)element).attribute("class").getValue();
-                StringInputBeanFactory stringInputBeanFactory = new StringInputBeanFactory();
-                return stringInputBeanFactory.getSimpleBean(className);
+                return getSimpleBean(className);
             }
         }
 
         return null;
     }
 
-    @Override
-    public Object getBeanWithParam(String className, Class[] initTypes, Object[] inits) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Object getBeanWithConstructorInjector(String beanId) {
+        if (null == beanId || beanId.isEmpty()) return null;
+
+        List beanList = xmlFileReader.nodeList("wheel");
+        for (Object element : beanList) {
+            String id = ((Element)element).attribute("id").getValue();
+            if (id.equals(beanId)) {
+                String className = ((Element)element).attribute("class").getValue();
+
+                List<Element> elementList = ((Element) element).elements("constructor-arg");
+                int paramCount = elementList.size();
+
+                if (paramCount <= 0) return null;
+
+                Class[] initTypes = new Class[paramCount];
+                Object[] inits = new Object[paramCount];
+
+                for (int i=0; i<paramCount; i++) {
+                    String type = elementList.get(i).attribute("type").getValue();
+
+                    if ("Integer".equals(type) || "int".equals(type)) {
+                        initTypes[i] = int.class;
+                        inits[i] = Integer.valueOf(elementList.get(i).attribute("value").getValue());
+                    } else if ("Double".equals(type) || "double".equals(type)) {
+                        initTypes[i] = double.class;
+                        inits[i] = Double.valueOf(elementList.get(i).attribute("value").getValue());
+                    } else if ("Float".equals(type) || "float".equals(type)) {
+                        initTypes[i] = float.class;
+                        inits[i] = Float.valueOf(elementList.get(i).attribute("value").getValue());
+                    } else if ("Char".equals(type) || "char".equals(type)) {
+                        initTypes[i] = char.class;
+                        inits[i] = elementList.get(i).attribute("value").getValue().charAt(0);
+                    } else {
+                        initTypes[i] = type.getClass();
+                        inits[i] = elementList.get(i).attribute("value").getValue();
+                    }
+                }
+
+                return getBeanWithParam(className, initTypes, inits);
+            }
+        }
+
+        return null;
     }
 
-    @Override
-    public Object getBeanBySetter(String className, Map<String, Object> setterParams) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Object getBeanWithSetterInjector(String beanId) {
+        if (null == beanId || beanId.isEmpty()) return null;
+
+        List beanList = xmlFileReader.nodeList("wheel");
+        for (Object element : beanList) {
+            String id = ((Element)element).attribute("id").getValue();
+            if (id.equals(beanId)) {
+                String className = ((Element)element).attribute("class").getValue();
+
+                List<Element> elementList = ((Element) element).elements("setter-arg");
+                int paramCount = elementList.size();
+
+                if (paramCount <= 0) return null;
+
+                Map<String, Object> settersMap = new HashMap<String, Object>();
+
+                for (int i=0; i<paramCount; i++) {
+                    String type = elementList.get(i).attribute("type").getValue();
+
+                    if ("Integer".equals(type) || "int".equals(type)) {
+                        settersMap.put(elementList.get(i).attribute("name").getValue(), Integer.valueOf(elementList.get(i).attribute("value").getValue()));
+                    } else if ("Double".equals(type) || "double".equals(type)) {
+                        settersMap.put(elementList.get(i).attribute("name").getValue(), Double.valueOf(elementList.get(i).attribute("value").getValue()));
+                    } else if ("Float".equals(type) || "float".equals(type)) {
+                        settersMap.put(elementList.get(i).attribute("name").getValue(), Float.valueOf(elementList.get(i).attribute("value").getValue()));
+                    } else if ("Char".equals(type) || "char".equals(type)) {
+                        settersMap.put(elementList.get(i).attribute("name").getValue(), elementList.get(i).attribute("value").getValue().charAt(0));
+                    } else {
+                        settersMap.put(elementList.get(i).attribute("name").getValue(), elementList.get(i).attribute("value").getValue());
+                    }
+                }
+
+                return getBeanBySetter(className, settersMap);
+            }
+        }
+
+        return null;
     }
 }

@@ -5,12 +5,7 @@ import com.huan.di.beans.Transportation;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -21,7 +16,7 @@ import static org.junit.Assert.assertThat;
  * To change this template use File | Settings | File Templates.
  */
 public class XMLInputBeanFactoryTest {
-    public BeanFactory beanFactory;
+    public XMLInputBeanFactory beanFactory;
 
     @Before
     public void init(){
@@ -30,56 +25,47 @@ public class XMLInputBeanFactoryTest {
 
     @Test
     public void shouldGotNullObjectWithEmptyString(){
-        Transportation train = (Transportation) beanFactory.getSimpleBean("");
+        Transportation train = (Transportation) beanFactory.getSimpleBeanByBeanId("");
         assertThat(train, nullValue());
     }
 
     @Test
     public void shouldBeAbleToGetObjectByString(){
         String beanId = "train";
-        Transportation train = (Transportation) beanFactory.getSimpleBean(beanId);
+        Transportation train = (Transportation) beanFactory.getSimpleBeanByBeanId(beanId);
 
         assertThat(train, notNullValue());
         assertThat(train.getName(), is("Train"));
     }
 
     @Test
-    public void shouldBeAbleToGetObjectWithParameter(){
-        String className = "com.huan.di.beans.Location";
-        Class[] initTypes = new Class[]{String.class};
-        Object[] inits = new Object[]{"Xian"};
-        Location location = (Location) beanFactory.getBeanWithParam(className, initTypes, inits);
+    public void shouldBeAbleToGetObjectConstructorInjector(){
+        String beanId = "location";
+        Location location = (Location) beanFactory.getBeanWithConstructorInjector(beanId);
 
         assertThat(location, notNullValue());
-        assertThat(location.getName(), is("Xian"));
+        assertThat(location.getName(), is("Dunhuang"));
     }
 
     @Test
-    public void shouldBeAbleToGetClassMoreThanOneParameters(){
-        String className = "com.huan.di.beans.Car";
-        Class[] initTypes = new Class[]{String.class, double.class, int.class};
-        Object[] inits = new Object[]{"cross_polo", 2.0, 100};
-        Transportation transportation = (Transportation) beanFactory.getBeanWithParam(className, initTypes, inits);
+    public void shouldBeAbleToGetObjectConstructorInjectorMoreThanOneParameters(){
+        String beanId = "car";
+        Transportation transportation = (Transportation) beanFactory.getBeanWithConstructorInjector(beanId);
 
         assertThat(transportation, notNullValue());
         assertThat(transportation.getName(), is("cross_polo"));
-        assertThat(transportation.getPricePreMiles(), is(2.0));
+        assertThat(transportation.getPricePreMiles(), is(2.1));
         assertThat(transportation.getSpeed(), is(100));
     }
 
     @Test
-    public void shouldCreateObjectBySetters(){
-        String className = "com.huan.di.beans.Car";
-        Map<String, Object> setterParams = new HashMap<String, Object>();
-        setterParams.put("name", "polo");
-        setterParams.put("pricePreMiles", 2.0);
-        setterParams.put("speed", 100);
-
-        Transportation transportation = (Transportation) beanFactory.getBeanBySetter(className, setterParams);
+    public void shouldBeAbleToGetObjectSetterInjector(){
+        String beanId = "car2";
+        Transportation transportation = (Transportation) beanFactory.getBeanWithSetterInjector(beanId);
 
         assertThat(transportation, notNullValue());
         assertThat(transportation.getName(), is("polo"));
-        assertThat(transportation.getPricePreMiles(), is(2.0));
+        assertThat(transportation.getPricePreMiles(), is(2.4));
         assertThat(transportation.getSpeed(), is(100));
     }
 }

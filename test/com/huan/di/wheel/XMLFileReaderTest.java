@@ -36,12 +36,12 @@ public class XMLFileReaderTest {
 
     @Test
     public void shouldAllBeansConfigedInFile(){
-        assertThat(xmlFileReader.nodeSize(), is(3));
+        assertThat(xmlFileReader.nodeSize(), is(4));
     }
 
     @Test
     public void shouldHaveNodesWithName(){
         List nodeList = xmlFileReader.nodeList("wheel");
-        assertThat(nodeList.size(), is(3));
+        assertThat(nodeList.size(), is(4));
     }
 }

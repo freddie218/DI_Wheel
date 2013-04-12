@@ -15,4 +15,5 @@ public interface BeanFactory {
     Object getBeanWithParam(String className, Class[] initTypes, Object[] inits);
 
     Object getBeanBySetter(String className, Map<String, Object> setterParams);
+
 }
